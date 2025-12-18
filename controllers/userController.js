@@ -30,12 +30,33 @@ export const getUserById = async (req, res) => {
 
 export const createUser = async (req, res) => {
   try {
-    const { name, age, email, gender } = req.body
+    const { name, age, gender } = req.body
 
     const user = await User.create({
       name,
       age,
-      email,
+      gender
+    })
+
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+}
+
+export const updateUser = async (req, res) => {
+  try {
+    const users = await User.find()
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'No users found' })
+    }
+
+    const { name, age, gender } = req.body
+
+    const user = await User.create({
+      name,
+      age,
       gender
     })
 
