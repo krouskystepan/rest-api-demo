@@ -44,7 +44,7 @@ export const createUser = async (req, res) => {
   }
 }
 
-export const updateUser = async (req, res) => {
+export const updateWholeUser = async (req, res) => {
   try {
     const users = await User.find()
 
@@ -61,6 +61,23 @@ export const updateUser = async (req, res) => {
     })
 
     res.status(201).json(user)
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+}
+
+export const updateUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    })
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    res.json(user)
   } catch (error) {
     res.status(400).json({ message: error.message })
   }

@@ -1,9 +1,13 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import { router as userRoutes } from './routes/userRoutes.js'
+import swaggerUi from 'swagger-ui-express'
+import { swaggerSpec } from './swagger.js'
 
 const app = express()
 app.use(express.json())
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 mongoose
   .connect('mongodb://localhost:27017/dev')
@@ -13,7 +17,10 @@ mongoose
   )
 
 app.get('/', (req, res) => {
-  res.send('Welcome to REST API DEMO 🚀')
+  res.send(`
+    <h1>Welcome to REST API DEMO 🚀</h1>
+    <a href="/docs" target="_blank">📄 Open Swagger Docs</a>
+  `)
 })
 
 app.use('/users', userRoutes)
